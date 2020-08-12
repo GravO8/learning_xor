@@ -1,10 +1,10 @@
 from random import uniform
 import matplotlib.pyplot as plt
 
-and_examples = [ [0,0,0],
-                 [0,1,0],
-                 [1,0,0],
-                 [1,1,1] ]
+or_examples = [ [0,0,0],
+                [0,1,1],
+                [1,0,1],
+                [1,1,1] ]
 to_plot = []
 current = 0
 iterations = 20
@@ -61,24 +61,24 @@ def init_perceptron():
 def learn(perceptron):
     for i in range(iterations):
         avg_error = 0
-        for example in and_examples:
+        for example in or_examples:
             avg_error += perceptron.update(example)
-        avg_error /= len(and_examples)
+        avg_error /= len(or_examples)
         to_plot.append(avg_error)
         
 def test(perceptron):
     avg_error = 0
-    for example in and_examples:
+    for example in or_examples:
         print_example(example)
         y = get_y(example)
         output = perceptron.calculate_output(example)
         avg_error += perceptron.percent_error(output, y)
         print(" ["+str( perceptron.normalize(output) ) +"]")
-    avg_error /= len(and_examples)
+    avg_error /= len(or_examples)
     to_plot.append(avg_error)
     
 def print_example(example):
-    print(str(get_x1(example)) + " AND "+str(get_x2(example))+" = "+str(get_y(example)), end="")
+    print(str(get_x1(example)) + " OR "+str(get_x2(example))+" = "+str(get_y(example)), end="")
     
 def plot():
     plt.close()
