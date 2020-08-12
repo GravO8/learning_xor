@@ -1,10 +1,13 @@
 from random import uniform
-
+import matplotlib.pyplot as plt
 
 and_examples = [ [0,0,0],
                  [0,1,0],
                  [1,0,0],
                  [1,1,1] ]
+to_plot = []
+current = 0
+iterations = 100
                  
 def get_x1(example):
     return example[0]
@@ -31,8 +34,10 @@ class Perceptron:
 
     def update(self, example):
         output = self.calculate_output(example)
-        if(self.normalize(output) != get_y(example)):
-            self.update_weights(example, output)
+        y = get_y(example)
+        if(self.normalize(output) != y):
+            self.update_weights(example, output)    
+        return percent_error(output, y)
         
     def update_weights(self, example, output):
         delta = get_y(example) - output
@@ -51,20 +56,49 @@ def init_perceptron():
     return Perceptron(w1, w2, b)
         
 def learn(perceptron):
-    for i in range(10):
+    for i in range(iterations):
+        avg_error = 0
         for example in and_examples:
-            perceptron.update(example)
+            avg_error += perceptron.update(example)
+        avg_error /= len(and_examples)
+        to_plot.append(avg_error)
         
 def test(perceptron):
+    avg_error = 0
     for example in and_examples:
         print_example(example)
-        print(" got: "+str( perceptron.normalize(perceptron.calculate_output(example)) ))
+        y = get_y(example)
+        output = perceptron.calculate_output(example)
+        avg_error += percent_error(output, y)
+        print(" ["+str( perceptron.normalize(output) ) +"]")
+    avg_error /= len(and_examples)
+    to_plot.append(avg_error)
     
 def print_example(example):
-    print(str(get_x1(example)) + " AND "+str(get_x2(example))+" = "+str(get_y(example)) )
+    print(str(get_x1(example)) + " AND "+str(get_x2(example))+" = "+str(get_y(example)), end="")
     
+def plot():
+    plt.close()
+    plt.plot([i for i in range(len(to_plot))], to_plot, '-o')
+    plt.ylim(0,100)
+    # plt.show()
+    plt.savefig("error_rate"+str(current)+".png")
     
-if __name__ == "__main__":
+def percent_error(output, y):
+    if(y == 0):
+        return abs(output-y)*100
+    return abs(output-y)*100/y
+    
+def run():
+    global current, to_plot
+    print(" "+str(current)+" =====================================================")
+    to_plot = []
     perceptron = init_perceptron()
     learn(perceptron)
     test(perceptron)
+    plot()
+    current += 1
+    
+if __name__ == "__main__":
+    for i in range(10):
+        run()
