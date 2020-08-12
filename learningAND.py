@@ -7,7 +7,7 @@ and_examples = [ [0,0,0],
                  [1,1,1] ]
 to_plot = []
 current = 0
-iterations = 100
+iterations = 10
                  
 def get_x1(example):
     return example[0]
@@ -22,7 +22,7 @@ class Perceptron:
         self._w1 = w1
         self._w2 = w2
         self._b = b
-        self._alpha = 0.4 #learning rate
+        self._alpha = 0.5 #learning rate
     
     def normalize(self, output):
         if(output > 0):
@@ -37,13 +37,16 @@ class Perceptron:
         y = get_y(example)
         if(self.normalize(output) != y):
             self.update_weights(example, output)    
-        return percent_error(output, y)
+        return self.percent_error(output, y)
         
     def update_weights(self, example, output):
         delta = get_y(example) - output
         self._w1 += self._alpha * delta * get_x1(example)
         self._w2 += self._alpha * delta * get_x2(example)
         self._b += self._alpha * delta
+        
+    def percent_error(self, output, y):
+        return abs(self.normalize(output)-y)*100
         
 
 def init_perceptron():
@@ -64,15 +67,11 @@ def learn(perceptron):
         to_plot.append(avg_error)
         
 def test(perceptron):
-    avg_error = 0
     for example in and_examples:
         print_example(example)
         y = get_y(example)
         output = perceptron.calculate_output(example)
-        avg_error += percent_error(output, y)
         print(" ["+str( perceptron.normalize(output) ) +"]")
-    avg_error /= len(and_examples)
-    to_plot.append(avg_error)
     
 def print_example(example):
     print(str(get_x1(example)) + " AND "+str(get_x2(example))+" = "+str(get_y(example)), end="")
@@ -83,11 +82,6 @@ def plot():
     plt.ylim(0,100)
     # plt.show()
     plt.savefig("error_rate"+str(current)+".png")
-    
-def percent_error(output, y):
-    if(y == 0):
-        return abs(output-y)*100
-    return abs(output-y)*100/y
     
 def run():
     global current, to_plot
