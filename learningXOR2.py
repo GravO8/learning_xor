@@ -7,8 +7,8 @@ xor_examples = [ [0,0,0],
                  [1,0,1],
                  [1,1,0] ]
 to_plot = []
-alpha = 0.5 #learning rate
-iterations = 10000
+alpha = 0.1 #learning rate
+iterations = 1000
 
 def get_x1(example):
     return example[0]
@@ -77,9 +77,6 @@ class Perceptron:
         self.db += chain
         
     def update(self):
-        # print(self.dw1/len(xor_examples))
-        # print(self.dw2/len(xor_examples))
-        # print(self.db/len(xor_examples))
         self.w1 -= self.dw1/len(xor_examples)
         self.w2 -= self.dw2/len(xor_examples)
         self.b  -= self.db/len(xor_examples)
@@ -94,20 +91,20 @@ class Perceptron:
         return abs(z-y)*100
     def se(self, z, y):
         return 0.5*(z-y)**2
-        
-    def print(self, tab = 0):
-        start = " " * tab
-        print(start + "w1: "+ str(self.w1))
-        print(start + "w2: "+ str(self.w2))
-        print(start + "b: "+str(self.b))
-        if(self.adj_p1 != None):
-            self.adj_p1.print(2)
-            self.adj_p2.print(2)
-    
+            
+w1 = uniform(-1,1)/3
+w2 = uniform(-1,1)/3
+b_ = uniform(-1,1)/3
+wa1 = uniform(-1,1)/3
+wa2 = uniform(-1,1)/3
+ba = uniform(-1,1)/3
+wb1 = uniform(-1,1)/3
+wb2 = uniform(-1,1)/3
+bb = uniform(-1,1)/3
 def init_MLP():
-    a = Perceptron(uniform(-1,1)/3, uniform(-1,1)/3, uniform(-1,1)/3)
-    b = Perceptron(uniform(-1,1)/3, uniform(-1,1)/3, uniform(-1,1)/3)
-    out = Perceptron(uniform(-1,1)/3, uniform(-1,1)/3, uniform(-1,1)/3)
+    a = Perceptron(w1,w2,b_)
+    b = Perceptron(wa1,wa2,ba)
+    out = Perceptron(wb1,wb2,bb)
     out.add_adjacent_perceptrons(a,b)
     return out
         
@@ -142,9 +139,10 @@ def plot(current):
     plt.savefig("error_rate"+str(current)+".png")
     
 def run(current):
-    global to_plot
-    print(" "+str(current)+" =====================================================")
+    global to_plot, alpha
+    print(" "+str(current)+" alpha "+str(alpha)+" ======================================================")
     to_plot = []
+    alpha += 10
     mlp = init_MLP()
     learn(mlp)
     test(mlp)
@@ -153,4 +151,3 @@ def run(current):
 if __name__ == "__main__":
     for i in range(10):
         run(i)
-    # run(0)

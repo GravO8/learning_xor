@@ -24,16 +24,16 @@ class Perceptron:
         self._b = b
         self._alpha = 0.15 #learning rate
     
-    def normalize(self, output):
+    def binary_step(self, output):
         if(output > 0):
             return 1
         return 0
         
-    def calculate_output(self, example):
+    def output(self, example):
         return self._w1*get_x1(example) + self._w2*get_x2(example) + self._b
 
     def update(self, example):
-        output = self.normalize(self.calculate_output(example))
+        output = self.binary_step(self.output(example))
         y = get_y(example)
         if(output != y):
             self.update_weights(example, output)    
@@ -46,13 +46,13 @@ class Perceptron:
         self._b += self._alpha * delta
         
     def percent_error(self, output, y):
-        return abs(self.normalize(output)-y)*100
+        return abs(self.binary_step(output)-y)*100
         
 
 def init_perceptron():
-    w1 = uniform(-0.99, 0.99)
-    w2 = uniform(-0.99, 0.99)
-    b = uniform(-0.99, 0.99)
+    w1 = uniform(-1, 1)
+    w2 = uniform(-1, 1)
+    b = uniform(-1, 1)
     # w1 = 0.5
     # w2 = 0.5
     # b = 0.5
@@ -71,9 +71,9 @@ def test(perceptron):
     for example in or_examples:
         print_example(example)
         y = get_y(example)
-        output = perceptron.calculate_output(example)
+        output = perceptron.output(example)
         avg_error += perceptron.percent_error(output, y)
-        print(" ["+str( perceptron.normalize(output) ) +"]")
+        print(" ["+str( perceptron.binary_step(output) ) +"]")
     avg_error /= len(or_examples)
     to_plot.append(avg_error)
     
