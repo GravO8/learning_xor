@@ -142,11 +142,11 @@ def run(current):
     global to_plot, alpha
     print(" "+str(current)+" alpha "+str(alpha)+" ======================================================")
     to_plot = []
-    alpha += 10
     mlp = init_MLP()
     learn(mlp)
     test(mlp)
     plot(current)
+    alpha += 10
     
 if __name__ == "__main__":
     for i in range(10):
