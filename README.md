@@ -1,6 +1,6 @@
 <h1 align="center">Learning simple binary functions</h1>
 
-Here's a set of very simple programs that learn the AND, OR and XOR functions. 
+Here's a set of very simple programs that learn the AND, OR, ADD, SUB and XOR function. 
 
 ## Learning AND 
 
